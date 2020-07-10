@@ -37,6 +37,8 @@ if __name__ == '__main__':
         if request.method == 'OPTIONS':
             return build_preflight_response()
         return jsonify(api.delete_lesson(timetable, json.loads(request.data.decode())))
+        
+    app.run()
 
 
 timetable = api.init_timetable()
@@ -50,4 +52,3 @@ def build_preflight_response():
     return response
 
 
-app.run()
