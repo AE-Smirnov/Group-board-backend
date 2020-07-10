@@ -9,9 +9,9 @@ class App(Flask):
         super().__init__(*args, **kwargs)
         flask_cors.CORS(self)
 
-if __name__ == '__main__':
-    app = App(__name__)
-    app.config['JSON_AS_ASCII'] = False
+
+app = App(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 
 @app.route('/')
