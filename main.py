@@ -20,8 +20,10 @@ def index():
     return jsonify('Hello')
 
 
-@app.route('/api/v1/get_all', methods=['GET'])
+@app.route('/api/v1/get_all', methods=['GET', 'OPTIONS', 'POST'])
 def get_all():
+    if request.method == 'OPTIONS':
+        return build_preflight_response()
     return str(api.get_all(timetable)).replace("'", '"')
 
 
