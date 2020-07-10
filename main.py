@@ -37,7 +37,7 @@ def delete_lesson():
         return build_preflight_response()
     return jsonify(api.delete_lesson(timetable, json.loads(request.data.decode())))
     
-app.run()
+#app.run()
 
 
 timetable = api.init_timetable()
