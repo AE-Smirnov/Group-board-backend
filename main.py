@@ -54,4 +54,4 @@ def build_preflight_response():
     return response
 
 # Bind to PORT if defined, otherwise default to 5000.
-app.run()
+#app.run()
