@@ -20,30 +20,37 @@ def index():
     return jsonify('Hello')
 
 
-@app.route('/api/v1/get_all', methods=['GET', 'OPTIONS', 'POST'])
-def get_all():
+@app.route('/api/v1/get_started', methods=['GET', 'OPTIONS', 'POST'])
+def start():
     if request.method == 'OPTIONS':
         return build_preflight_response()
-    return str(api.get_all(timetable)).replace("'", '"')
+    return api.get_messages(messenger)
 
 
-@app.route('/api/v1/create_or_update', methods=['POST', 'OPTIONS'])
-def add_lesson():
+@app.route('/api/v1/get_all', methods=['GET', 'OPTIONS'])
+def get_all_messages():
     if request.method == 'OPTIONS':
         return build_preflight_response()
-    return jsonify(api.add_lesson(timetable, json.loads(request.data.decode())))
+    return jsonify(api.get_messages(messenger))
 
 
 @app.route('/api/v1/delete', methods=['DELETE', 'OPTIONS'])
-def delete_lesson():
+def delete():
     if request.method == 'OPTIONS':
         return build_preflight_response()
-    return jsonify(api.delete_lesson(timetable, json.loads(request.data.decode())))
+    return jsonify(api.delete_message(messenger, json.loads(request.data.decode())))
+
+
+@app.route('/api/v1/create_or_update', methods=['POST', 'OPTIONS'])
+def create_or_update():
+    if request.method == 'OPTIONS':
+        return build_preflight_response()
+    return jsonify(api.add_or_update_message(messenger, json.loads(request.data.decode())))
     
 #app.run()
 
 
-timetable = api.init_timetable()
+messenger = api.init_messenger()
 
 
 def build_preflight_response():
@@ -53,5 +60,6 @@ def build_preflight_response():
     response.headers.add('Access-Control-Allow-Methods', "*")
     return response
 
+
 # Bind to PORT if defined, otherwise default to 5000.
-#app.run()
+app.run()

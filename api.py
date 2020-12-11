@@ -1,24 +1,26 @@
-from timetable import Timetable
-from lesson import Lesson
+from message import Message
+from messenger import Messenger
 from dbmanager import DbManager
 
 
-def add_lesson(timetable, lesson_dict):
-    lesson = Lesson.init_by_dict(lesson_dict)
-    if not lesson.id and lesson.free():
-        timetable.add_lesson(lesson)
-    elif lesson.free(lesson.id):
-        timetable.update_lesson(DbManager().find({'id': lesson.id})[0], lesson)
-    return lesson.as_dict()
-
-def delete_lesson(timetable, lesson_dict):
-    lesson = Lesson.init_by_dict(lesson_dict)
-    timetable.delete_lesson(lesson)
+def get_messages(messenger):
+    return messenger.read_messages()
 
 
-def init_timetable(**kwargs):
-    return Timetable(kwargs)
+def init_messenger():
+    return Messenger()
 
 
-def get_all(timetable):
-    return timetable.read_timetable({})
+def delete_message(messenger, message_json):
+    message = Message(**message_json)
+    messenger.delete_message(message)
+
+
+def add_or_update_message(messenger, message_info):
+    message = Message(**message_info)
+    if not message.id:
+        messenger.add_message(message)
+    else:
+        messenger.update_message(DbManager().find({'id': message.id})[0], message)
+    message._id = None
+    return message.as_dict()

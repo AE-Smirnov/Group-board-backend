@@ -12,23 +12,25 @@ class MetaSingleton(type):
 
 class DbManager(metaclass=MetaSingleton):
     def __init__(self):
-        client = MongoClient('mongodb+srv://admin:admin@cluster0.pwmrs.mongodb.net/test?retryWrites=true&w=majority')
-        db = client.test
-        self.collection = db.collection
+        client = MongoClient('mongodb+srv://admin:admin@cluster0.pwmrs.mongodb.net/messenger?retryWrites=true&w=majority')
+        db = client.messenger
+        self.collection = db.messenger
 
-    def add(self, lesson):
-        add_dict = lesson.as_dict()
+    def add(self, message):
+        add_dict = message.as_dict()
         add_dict['id'] = self.next_id()
         self.collection.insert_one(add_dict)
 
-    def find(self, filter):
-        return self.collection.find(filter)
+    def find(self, filter, limit=20):
+        return self.collection.find(filter).limit(limit)
 
-    def update(self, filter, lesson):
-        self.collection.update(filter, {'$set': lesson.as_dict()})
+    def update(self, filter, message):
+        self.collection.update(filter, {'$set': message.as_dict()})
 
-    def delete(self, lesson):
-        self.collection.remove(lesson.as_dict())
+    def delete(self, message):
+        msg_dict = message.as_dict()
+        msg_dict.pop('id')
+        self.collection.remove(msg_dict)
 
     def next_id(self):
         return self.collection.aggregate([
